@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Link Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F5F5F5; /* Lighter background */
+            color: #FF851B; /* Orange text color */
+            margin: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #FF851B; /* Orange text color */
+        }
+        .search-bar, .settings {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .search-bar input, .search-bar button {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #FF851B; /* Orange border */
+            border-radius: 5px;
+        }
+        .search-bar button {
+            background-color: #FF851B; /* Orange background */
+            color: #FFF; /* White text */
+            cursor: pointer;
+        }
+        #image-container {
+            text-align: center;
+            margin: 20px 0;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        .line {
+            border-bottom: 2px solid #FF851B; /* Orange line */
+            margin: 20px 0;
+        }
+        .settings label {
+            display: block;
+            margin: 10px 0;
+            color: #FF851B; /* Orange text color */
+        }
+        .settings input[type="range"] {
+            width: 100%;
+        }
+        .settings button {
+            background-color: #FF851B; /* Orange background */
+            color: #FFF; /* White text */
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Link Viewer</h1>
+    <div class="search-bar">
+        <input type="text" id="link-input" placeholder="Enter image link here...">
+        <button onclick="openLink()">Open Link</button>
+    </div>
+    <div id="image-container"></div>
+    <div class="line"></div>
+    <h2>Settings</h2>
+    <div class="settings">
+        <label>
+            <input type="checkbox" id="show-border" onclick="toggleBorder()"> Show Border
+        </label>
+        <label>
+            Border Radius: <input type="range" id="border-radius" min="0" max="50" value="0" oninput="adjustBorderRadius(this.value)"> <span id="radius-value">0px</span>
+        </label>
+        <label>
+            Border Size: <input type="range" id="border-size" min="0" max="10" value="0" oninput="adjustBorderSize(this.value)"> <span id="size-value">0px</span>
+        </label>
+        <label>
+            <button onclick="flipImage('x')">Flip X Axis</button>
+        </label>
+        <label>
+            <button onclick="flipImage('y')">Flip Y Axis</button>
+        </label>
+        <label>
+            <button onclick="rotateImage()">Rotate 90°</button>
+        </label>
+    </div>
+
+    <script>
+        let rotation = 0;
+
+        function openLink() {
+            const linkInput = document.getElementById('link-input').value;
+            const imageContainer = document.getElementById('image-container');
+            const img = new Image();
+            img.src = linkInput;
+            img.onload = () => {
+                imageContainer.innerHTML = '';
+                img.style.border = 'none';
+                if (document.getElementById('show-border').checked) {
+                    img.style.border = '2px solid #FF851B'; /* Orange border */
+                }
+                imageContainer.appendChild(img);
+            };
+            img.onerror = () => {
+                generateQRCode(linkInput);
+            };
+        }
+
+        function toggleBorder() {
+            const image = document.querySelector('#image-container img');
+            if (image) {
+                image.style.border = document.getElementById('show-border').checked ? '2px solid #FF851B' : 'none';
+            }
+        }
+
+        function adjustBorderRadius(value) {
+            const image = document.querySelector('#image-container img');
+            if (image) {
+                image.style.borderRadius = `${value}px`;
+            }
+            document.getElementById('radius-value').innerText = `${value}px`;
+        }
+
+        function adjustBorderSize(value) {
+            const image = document.querySelector('#image-container img');
+            if (image) {
+                image.style.borderWidth = `${value}px`;
+            }
+            document.getElementById('size-value').innerText = `${value}px`;
+        }
+
+        function flipImage(axis) {
+            const image = document.querySelector('#image-container img');
+            if (image) {
+                if (axis === 'x') {
+                    image.style.transform = image.style.transform === 'scaleX(-1)' ? 'scaleX(1)' : 'scaleX(-1)';
+                } else {
+                    image.style.transform = image.style.transform === 'scaleY(-1)' ? 'scaleY(1)' : 'scaleY(-1)';
+                }
+            }
+        }
+
+        function rotateImage() {
+            rotation = (rotation + 90) % 360;
+            const image = document.querySelector('#image-container img');
+            if (image) {
+                image.style.transform = `rotate(${rotation}deg)`;
+            }
+        }
+
+        function generateQRCode(link) {
+            const imageContainer = document.getElementById('image-container');
+            imageContainer.innerHTML = '';
+            const qrCode = `https://api.qrserver.com/v1/create-qr-code/?data=${link}&size=200x200`;
+            const img = new Image();
+            img.src = qrCode;
+            imageContainer.appendChild(img);
+        }
+    </script>
+</body>
+</html>

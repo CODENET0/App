@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #fff9c4; /* Light yellow background */
+        }
+        .details-container {
+            border: 1px solid #ffc107; /* Amber border */
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #fff8e1; /* Light amber background */
+        }
+        .detail-item {
+            margin: 10px 0;
+            color: #ff6f00; /* Deep orange text */
+        }
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #ff6f00; /* Deep orange text */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="details-container">
+        <div class="title">Details</div>
+        <div class="detail-item">IP Address: <span id="ip-address">Loading...</span></div>
+        <div class="detail-item">Country: <span id="country">Loading...</span></div>
+        <div class="detail-item">Browser: <span id="browser">Loading...</span></div>
+        <div class="detail-item">Operating System: <span id="os">Loading...</span></div>
+        <div class="detail-item">User Agent: <span id="user-agent">Loading...</span></div>
+        <div class="detail-item">Host Name: <span id="host-name">Loading...</span></div>
+        <div class="detail-item">ISP: <span id="isp">Loading...</span></div>
+        <div class="detail-item">Device Charging: <span id="charging-status">Loading...</span></div>
+    </div>
+
+    <script>
+        async function getDetails() {
+            const response = await fetch('https://api.ipify.org?format=json');
+            const data = await response.json();
+            document.getElementById('ip-address').textContent = data.ip;
+
+            const geoResponse = await fetch(`https://ipapi.co/${data.ip}/json/`);
+            const geoData = await geoResponse.json();
+            document.getElementById('country').textContent = geoData.country_name;
+            document.getElementById('isp').textContent = geoData.org;
+
+            document.getElementById('browser').textContent = navigator.userAgent;
+            document.getElementById('os').textContent = navigator.platform;
+            document.getElementById('user-agent').textContent = navigator.userAgent;
+            document.getElementById('host-name').textContent = window.location.hostname;
+
+            if (navigator.getBattery) {
+                const battery = await navigator.getBattery();
+                document.getElementById('charging-status').textContent = battery.charging ? 'Yes' : 'No';
+            } else {
+                document.getElementById('charging-status').textContent = 'Not Supported';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', getDetails);
+    </script>
+</body>
+</html>
