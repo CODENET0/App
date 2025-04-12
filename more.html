@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Opener</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary-red: #d32f2f;
+            --dark-red: #b71c1c;
+            --light-red: #ffcdd2;
+            --pale-red: #ffebee;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--pale-red);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle, #ffcdd2 1px, transparent 1px);
+            background-size: 20px 20px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(210, 47, 47, 0.2);
+            padding: 40px;
+            margin-top: 50px;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeInUp 0.8s 0.3s forwards;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-red), var(--dark-red));
+        }
+        
+        h1 {
+            color: var(--dark-red);
+            margin-bottom: 30px;
+            font-size: 28px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: var(--primary-red);
+            border-radius: 3px;
+        }
+        
+        .input-container {
+            position: relative;
+            margin: 25px 0;
+        }
+        
+        .input-box {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #ef9a9a;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: all 0.3s;
+            background-color: #fff9f9;
+        }
+        
+        .input-box:focus {
+            outline: none;
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.2);
+            transform: scale(1.02);
+        }
+        
+        .open-btn {
+            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4);
+        }
+        
+        .open-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(211, 47, 47, 0.5);
+        }
+        
+        .open-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .open-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        
+        .open-btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+        
+        .floating-icons {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .floating-icon {
+            position: absolute;
+            color: rgba(211, 47, 47, 0.1);
+            font-size: 24px;
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 1;
+            }
+            20% {
+                transform: scale(25, 25);
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(40, 40);
+            }
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: var(--primary-red);
+            opacity: 0;
+            z-index: 999;
+            animation: confetti 3s ease-out;
+        }
+        
+        @keyframes confetti {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container animate__animated">
+        <h1 class="animate__animated animate__pulse animate__infinite animate__slower">Put your link below</h1>
+        
+        <div class="input-container">
+            <input type="text" class="input-box animate__animated" placeholder="https://example.com" id="linkInput">
+        </div>
+        
+        <button class="open-btn animate__animated" onclick="openLink()" id="openBtn">
+            Open Link
+        </button>
+    </div>
+    
+    <div class="floating-icons" id="floatingIcons"></div>
+
+    <script>
+        // Create floating icons
+        const icons = ['🔗', '🌐', '🚀', '💻', '📎', '🔍'];
+        const floatingIcons = document.getElementById('floatingIcons');
+        
+        for (let i = 0; i < 15; i++) {
+            const icon = document.createElement('div');
+            icon.className = 'floating-icon';
+            icon.textContent = icons[Math.floor(Math.random() * icons.length)];
+            icon.style.left = Math.random() * 100 + '%';
+            icon.style.top = Math.random() * 100 + '%';
+            icon.style.animationDelay = Math.random() * 15 + 's';
+            icon.style.animationDuration = 10 + Math.random() * 20 + 's';
+            floatingIcons.appendChild(icon);
+        }
+        
+        function openLink() {
+            const linkInput = document.getElementById('linkInput');
+            const openBtn = document.getElementById('openBtn');
+            let url = linkInput.value.trim();
+            
+            if (!url) {
+                // Shake animation if input is empty
+                linkInput.classList.add('animate__animated', 'animate__headShake');
+                setTimeout(() => {
+                    linkInput.classList.remove('animate__animated', 'animate__headShake');
+                }, 1000);
+                return;
+            }
+            
+            // Add https:// if not present
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
+            }
+            
+            // Button click animation
+            openBtn.classList.add('animate__animated', 'animate__rubberBand');
+            setTimeout(() => {
+                openBtn.classList.remove('animate__animated', 'animate__rubberBand');
+            }, 1000);
+            
+            // Create confetti
+            createConfetti();
+            
+            // Open the link after a short delay for animation
+            setTimeout(() => {
+                window.open(url, '_blank');
+            }, 800);
+        }
+        
+        function createConfetti() {
+            const colors = ['#d32f2f', '#b71c1c', '#ff5252', '#ff8a80'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = 5 + Math.random() * 10 + 'px';
+                confetti.style.height = 5 + Math.random() * 10 + 'px';
+                confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                document.body.appendChild(confetti);
+                
+                // Remove confetti after animation
+                setTimeout(() => {
+                    confetti.remove();
+                }, 3000);
+            }
+        }
+        
+        // Add animation to input when focused
+        document.getElementById('linkInput').addEventListener('focus', function() {
+            this.classList.add('animate__animated', 'animate__pulse');
+            setTimeout(() => {
+                this.classList.remove('animate__animated', 'animate__pulse');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
