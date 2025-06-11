@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkFlow - Ultimate Minimal</title>
+    <style>
+        :root {
+            --primary: #0066ff;
+            --primary-dark: #0044cc;
+            --primary-light: #3399ff;
+            --background: #0a0e1a;
+            --card-bg: #151f33;
+            --text: #ffffff;
+            --text-secondary: #b3b3b3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+            padding-bottom: 50px;
+            overscroll-behavior-y: contain;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(to bottom, rgba(10, 14, 26, 0.95) 0%, rgba(10, 14, 26, 0) 100%);
+            padding: 25px 0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-light);
+            letter-spacing: -0.5px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .search-container {
+            position: relative;
+            flex-grow: 1;
+            max-width: 400px;
+        }
+
+        #search {
+            width: 100%;
+            padding: 12px 20px;
+            background-color: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        #search:focus {
+            outline: none;
+            background-color: rgba(20, 30, 50, 0.9);
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.3);
+        }
+
+        #category-filter {
+            padding: 12px 20px;
+            background-color: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            min-width: 180px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #category-filter:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.3);
+        }
+
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+            perspective: 1000px;
+        }
+
+        .link-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translateY(0) rotateX(0);
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            opacity: 0;
+        }
+
+        .link-card.visible {
+            opacity: 1;
+            transform: translateY(0) rotateX(0);
+        }
+
+        .link-card:hover {
+            transform: translateY(-5px) rotateX(5deg);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            z-index: 2;
+            border-color: rgba(0, 102, 255, 0.3);
+        }
+
+        .link-content {
+            padding: 25px;
+        }
+
+        .link-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .link-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .category-tag {
+            background: rgba(0, 102, 255, 0.15);
+            color: var(--primary-light);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid rgba(0, 102, 255, 0.3);
+        }
+
+        .link-actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .open-btn {
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 4px 10px rgba(0, 102, 255, 0.3);
+        }
+
+        .open-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 102, 255, 0.4);
+        }
+
+        .open-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Scroll animation */
+        @keyframes cardEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(30px) rotateX(-15deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) rotateX(0);
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-container {
+                max-width: 100%;
+            }
+
+            .link-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .link-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            #category-filter {
+                width: 100%;
+            }
+            
+            .link-name {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">LinkFlow</div>
+                <div class="controls">
+                    <div class="search-container">
+                        <input type="text" id="search" placeholder="Search links...">
+                    </div>
+                    <select id="category-filter">
+                        <option value="all">All Categories</option>
+                        <option value="social">Social Media</option>
+                        <option value="work">Work</option>
+                        <option value="learning">Learning</option>
+                        <option value="entertainment">Entertainment</option>
+                        <option value="productivity">Productivity</option>
+                        <option value="development">Development</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Link Grid -->
+        <div class="link-grid" id="link-grid">
+            <!-- Links will be added here dynamically -->
+        </div>
+    </div>
+
+    <script>
+        // Link data with multiple categories
+        const links = [
+        {
+               name: "thiings",
+               url: "https://thiings.co",
+               categories: ["image", "finder"]
+           },
+           {
+               name: "Typingbird",
+               url: "https://typingbird.com",
+               categories: ["typing", "game"]
+           },
+           {
+               name: "Pixie haus",
+               url: "https://pixie.haus",
+               categories: ["pixel", "art","ai"]
+           },
+           {
+               name: "Animejs",
+               url: "https://animejs.com",
+               categories: ["animation", "development"]
+           },
+           {
+               name: "Stay",
+               url: "https://staying.fun",
+               categories: ["visualize", "development"]
+           },
+           {
+               name: "Stirling PDF",
+               url: "https://stirlingpdf.com",
+               categories: ["pdf", "editor"]
+           },
+           {
+               name: "Reactbits",
+               url: "https://reactbits.dev",
+               categories: ["animation", "development"]
+           },
+           {
+               name: "PngImg",
+               url: "https://pngimg.com",
+               categories: ["image", "finder"]
+           },
+           {
+               name: "Instructables",
+               url: "https://instructables",
+               categories: ["diy", "craft"]
+           },
+           {
+               name: "TopoExport",
+               url: "https://topoexport",
+               categories: ["map", "3d"]
+           },
+           {
+               name: "LingoHut",
+               url: "https://lingohut.com",
+               categories: ["language", "learning"]
+           },
+           {
+               name: "Snazzy Maps",
+               url: "https://snazzymaps.com",
+               categories: ["map", ""]
+           },
+           {
+               name: "Emergent",
+               url: "https://emergent.sh",
+               categories: ["ai", "development"]
+           },
+           {
+               name: "Kiddo Worksheets",
+               url: "https://kiddoworksheets.com",
+               categories: ["woorksheet", "kids"]
+           },
+           {
+               name: "Hugging face",
+               url: "https://huggingface.co",
+               categories: ["ai", "3d"]
+           },
+           {
+               name: "Magic Eraser",
+               url: "https://magiceraser.pro",
+               categories: ["image", "editor"]
+           },
+           {
+               name: "3D tuning",
+               url: "https://3dtuning.com",
+               categories: ["car", "vehicles","3d"]
+           },
+           {
+               name: "StockIMG AI",
+               url: "https://stockimg.ai",
+               categories: ["image", "ai"]
+           },
+           {
+               name: "Symbolab",
+               url: "https://symbolab.com",
+               categories: ["learning", "maths"]
+           },
+           {
+               name: "Radiocast",
+               url: "https://radiocast.co",
+               categories: ["radio", "explore"]
+           },
+
+
+
+
+
+
+
+
+
+            {
+                name: "Twitter",
+                url: "https://twitter.com",
+                categories: ["social", "news"]
+            },
+            {
+                name: "GitHub",
+                url: "https://github.com",
+                categories: ["development", "work"]
+            },
+            {
+                name: "YouTube",
+                url: "https://youtube.com",
+                categories: ["entertainment", "learning"]
+            },
+            {
+                name: "Notion",
+                url: "https://notion.so",
+                categories: ["productivity", "work"]
+            },
+            {
+                name: "Coursera",
+                url: "https://coursera.org",
+                categories: ["learning", "education"]
+            },
+            {
+                name: "Netflix",
+                url: "https://netflix.com",
+                categories: ["entertainment"]
+            },
+            {
+                name: "Google Drive",
+                url: "https://drive.google.com",
+                categories: ["work", "productivity"]
+            },
+            {
+                name: "Stack Overflow",
+                url: "https://stackoverflow.com",
+                categories: ["development", "learning"]
+            },
+            {
+                name: "Reddit",
+                url: "https://reddit.com",
+                categories: ["social", "entertainment"]
+            },
+            {
+                name: "LinkedIn",
+                url: "https://linkedin.com",
+                categories: ["social", "work"]
+            },
+            {
+                name: "Medium",
+                url: "https://medium.com",
+                categories: ["learning", "news"]
+            },
+            {
+                name: "Spotify",
+                url: "https://spotify.com",
+                categories: ["entertainment"]
+            }
+        ];
+
+        // DOM elements
+        const linkGrid = document.getElementById('link-grid');
+        const searchInput = document.getElementById('search');
+        const categoryFilter = document.getElementById('category-filter');
+        let observer;
+
+        // Initialize the app
+        function init() {
+            renderLinks(links);
+            setupEventListeners();
+            setupScrollAnimation();
+        }
+
+        // Render all links
+        function renderLinks(linksToRender) {
+            linkGrid.innerHTML = '';
+            
+            linksToRender.forEach((link) => {
+                const linkElement = createLinkElement(link);
+                linkGrid.appendChild(linkElement);
+            });
+
+            // Reinitialize the observer after rendering new cards
+            if (observer) {
+                observer.disconnect();
+            }
+            setupScrollAnimation();
+        }
+
+        // Create a link card element
+        function createLinkElement(link) {
+            const card = document.createElement('div');
+            card.className = 'link-card';
+            
+            card.innerHTML = `
+                <div class="link-content">
+                    <div class="link-name">${link.name}</div>
+                    <div class="link-categories">
+                        ${link.categories.map(cat => `<span class="category-tag">${cat}</span>`).join('')}
+                    </div>
+                    <div class="link-actions">
+                        <a href="${link.url}" class="open-btn">Open</a>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Filter links based on search and category
+        function filterLinks() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedCategory = categoryFilter.value;
+            
+            const filtered = links.filter(link => {
+                // Search filter
+                const matchesSearch = link.name.toLowerCase().includes(searchTerm) || 
+                                     link.categories.some(cat => cat.toLowerCase().includes(searchTerm));
+                
+                // Category filter
+                const matchesCategory = selectedCategory === 'all' || 
+                                       link.categories.includes(selectedCategory);
+                
+                return matchesSearch && matchesCategory;
+            });
+            
+            renderLinks(filtered);
+        }
+
+        // Set up scroll animation
+        function setupScrollAnimation() {
+            observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            document.querySelectorAll('.link-card').forEach(card => {
+                observer.observe(card);
+            });
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            searchInput.addEventListener('input', filterLinks);
+            categoryFilter.addEventListener('change', filterLinks);
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
