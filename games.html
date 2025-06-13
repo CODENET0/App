@@ -221,7 +221,7 @@
             perspective: 1000px;
             cursor: pointer;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            min-height: 250px;
+            min-height: 200px;
             display: flex;
             flex-direction: column;
         }
@@ -246,17 +246,6 @@
 
         .game-card:hover::before {
             transform: translateX(100%);
-        }
-
-        .game-icon {
-            height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: var(--primary);
-            background: rgba(0, 0, 0, 0.2);
-            border-bottom: 1px solid var(--glass-border);
         }
 
         .game-info {
@@ -542,15 +531,6 @@
             <button class="category-btn" data-category="racing">Racing</button>
         </div>
 
-        <section class="games-section" id="allGamesSection">
-            <div class="section-header">
-                <h2>All Games</h2>
-            </div>
-            <div class="all-games-list" id="allGamesList">
-                <!-- All games will be inserted here by JavaScript -->
-            </div>
-        </section>
-
         <section class="games-section" id="featuredGames">
             <div class="section-header">
                 <h2>Popular Games</h2>
@@ -577,6 +557,19 @@
             </div>
         </section>
 
+        <section class="games-section" id="allGamesSection">
+            <div class="section-header">
+                <h2>All Games</h2>
+                <button class="expand-btn" data-section="allGames">
+                    <span>Show All</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </div>
+            <div class="all-games-list" id="allGamesList">
+                <!-- All games will be inserted here by JavaScript -->
+            </div>
+        </section>
+
         <div id="searchResultsContainer" class="search-results hidden">
             <div class="section-header">
                 <h2>Search Results</h2>
@@ -595,7 +588,7 @@
     </div>
 
     <script>
-        // Game data
+        // Game data (removed icons)
         const games = [
             {
                 id: 1,
@@ -603,7 +596,6 @@
                 description: "Navigate through asteroid fields and enemy ships in this fast-paced space shooter.",
                 tags: ["action", "arcade", "space"],
                 url: "https://example.com/space-rush",
-                icon: "fas fa-rocket",
                 isPopular: true,
                 isNew: false
             },
@@ -613,7 +605,6 @@
                 description: "Challenge your brain with hundreds of mind-bending puzzles and riddles.",
                 tags: ["puzzle", "brain", "logic"],
                 url: "https://example.com/puzzle-master",
-                icon: "fas fa-puzzle-piece",
                 isPopular: true,
                 isNew: false
             },
@@ -623,7 +614,6 @@
                 description: "Run, jump and swing through the dense jungle while collecting treasures.",
                 tags: ["adventure", "platformer", "action"],
                 url: "https://example.com/jungle-run",
-                icon: "fas fa-running",
                 isPopular: true,
                 isNew: false
             },
@@ -633,7 +623,6 @@
                 description: "Test your strategy skills against AI or players from around the world.",
                 tags: ["strategy", "board", "multiplayer"],
                 url: "https://example.com/chess-pro",
-                icon: "fas fa-chess",
                 isPopular: true,
                 isNew: false
             },
@@ -643,7 +632,6 @@
                 description: "Survive the zombie apocalypse by building defenses and scavenging for supplies.",
                 tags: ["action", "survival", "horror"],
                 url: "https://example.com/zombie-survival",
-                icon: "fas fa-biohazard",
                 isPopular: false,
                 isNew: true
             },
@@ -653,7 +641,6 @@
                 description: "High-speed racing with customizable cars and intense multiplayer action.",
                 tags: ["racing", "sports", "multiplayer"],
                 url: "https://example.com/car-rivals",
-                icon: "fas fa-car",
                 isPopular: false,
                 isNew: true
             },
@@ -663,7 +650,6 @@
                 description: "A colorful and addictive bubble shooter with hundreds of challenging levels.",
                 tags: ["arcade", "puzzle", "casual"],
                 url: "https://example.com/bubble-pop",
-                icon: "fas fa-bubbles",
                 isPopular: false,
                 isNew: true
             },
@@ -673,7 +659,6 @@
                 description: "Expand your vocabulary with this exciting word puzzle game.",
                 tags: ["puzzle", "word", "education"],
                 url: "https://example.com/word-genius",
-                icon: "fas fa-font",
                 isPopular: false,
                 isNew: true
             },
@@ -683,7 +668,6 @@
                 description: "Dunk, shoot and score in this realistic basketball simulation.",
                 tags: ["sports", "basketball", "multiplayer"],
                 url: "https://example.com/basketball-pro",
-                icon: "fas fa-basketball-ball",
                 isPopular: true,
                 isNew: false
             },
@@ -693,7 +677,6 @@
                 description: "Explore dark dungeons, fight monsters and collect epic loot.",
                 tags: ["adventure", "rpg", "action"],
                 url: "https://example.com/dungeon-crawler",
-                icon: "fas fa-dungeon",
                 isPopular: false,
                 isNew: true
             },
@@ -703,7 +686,6 @@
                 description: "Defend Earth from alien forces in this action-packed shooter.",
                 tags: ["action", "shooter", "sci-fi"],
                 url: "https://example.com/alien-invasion",
-                icon: "fas fa-alien",
                 isPopular: false,
                 isNew: true
             },
@@ -713,7 +695,6 @@
                 description: "Improve your math skills with fun and challenging problems.",
                 tags: ["puzzle", "education", "brain"],
                 url: "https://example.com/math-challenge",
-                icon: "fas fa-square-root-alt",
                 isPopular: false,
                 isNew: false
             }
@@ -740,8 +721,9 @@
             popularGamesContainer.innerHTML = '';
             newReleasesContainer.innerHTML = '';
 
-            // Display all games in the compact list
-            games.forEach(game => {
+            // Display all games in the compact list (limited to 8)
+            const allGamesToShow = games.slice(0, 8);
+            allGamesToShow.forEach(game => {
                 allGamesList.appendChild(createAllGamesItem(game));
             });
 
@@ -817,13 +799,6 @@
             card.dataset.id = game.id;
             card.dataset.tags = game.tags.join(' ');
 
-            // Game icon
-            const icon = document.createElement('div');
-            icon.className = 'game-icon';
-            const iconElement = document.createElement('i');
-            iconElement.className = game.icon;
-            icon.appendChild(iconElement);
-
             // Game info
             const info = document.createElement('div');
             info.className = 'game-info';
@@ -858,7 +833,6 @@
             info.appendChild(tagsContainer);
             info.appendChild(playBtn);
 
-            card.appendChild(icon);
             card.appendChild(info);
 
             return card;
@@ -921,9 +895,10 @@
 
             const filteredGames = games.filter(game => game.tags.includes(category));
             
-            // Update all games list
+            // Update all games list (limited to 8)
             allGamesList.innerHTML = '';
-            filteredGames.forEach(game => {
+            const filteredAllGames = filteredGames.slice(0, 8);
+            filteredAllGames.forEach(game => {
                 allGamesList.appendChild(createAllGamesItem(game));
             });
 
@@ -982,6 +957,21 @@
                 btn.innerHTML = '<span>Show Less</span> <i class="fas fa-chevron-up"></i>';
                 btn.onclick = () => collapseSections();
             }
+            else if (sectionId === 'allGames') {
+                const section = document.getElementById('allGamesSection');
+                section.classList.remove('hidden');
+                
+                // Show all games
+                allGamesList.innerHTML = '';
+                games.forEach(game => {
+                    allGamesList.appendChild(createAllGamesItem(game));
+                });
+
+                // Update expand button text
+                const btn = document.querySelector('[data-section="allGames"]');
+                btn.innerHTML = '<span>Show Less</span> <i class="fas fa-chevron-up"></i>';
+                btn.onclick = () => collapseSections();
+            }
         }
 
         // Collapse all sections back to normal view
@@ -996,6 +986,7 @@
             // Reset expand buttons
             document.querySelector('[data-section="popularGames"]').innerHTML = '<span>Show All</span> <i class="fas fa-chevron-down"></i>';
             document.querySelector('[data-section="newReleases"]').innerHTML = '<span>Show All</span> <i class="fas fa-chevron-down"></i>';
+            document.querySelector('[data-section="allGames"]').innerHTML = '<span>Show All</span> <i class="fas fa-chevron-down"></i>';
         }
 
         // Event listeners
