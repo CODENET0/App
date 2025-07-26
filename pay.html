@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PurpleBank - Account System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #7e57c2;
+            --primary-light: #b085f5;
+            --primary-dark: #4d2c91;
+            --light: #f3e5f5;
+            --dark: #311b92;
+            --success: #66bb6a;
+            --error: #ef5350;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e0c3fc, #bb86fc);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(126, 87, 194, 0.3);
+            overflow: hidden;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        header {
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .search-section {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .search-box {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto 20px;
+        }
+
+        #account-search {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #d9c7f8;
+            border-radius: 50px 0 0 50px;
+            font-size: 1.1rem;
+            outline: none;
+        }
+
+        #search-btn {
+            padding: 15px 25px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0 50px 50px 0;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        #search-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .results {
+            padding: 0 30px 30px;
+            display: none;
+        }
+
+        .account-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(126, 87, 194, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .account-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .account-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--dark);
+        }
+
+        .account-number {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .account-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .detail-item {
+            background: #f9f5ff;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .detail-label {
+            color: var(--primary);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .balance {
+            color: var(--primary-dark);
+            font-size: 1.5rem;
+        }
+
+        .pay-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+
+        .pay-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Payment Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .payment-modal {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .payment-modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: var(--dark);
+            font-size: 1.5rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #888;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0d0f0;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .amount-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .amount-btn {
+            padding: 12px;
+            background: #f0e5ff;
+            border: 2px solid #e0d0f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .amount-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .confirm-btn {
+            background: var(--success);
+            color: white;
+        }
+
+        .cancel-btn {
+            background: #f0f0f0;
+            color: #555;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background: var(--success);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none;
+            z-index: 1100;
+        }
+
+        .notification.error {
+            background: var(--error);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 600px) {
+            .account-details {
+                grid-template-columns: 1fr;
+            }
+
+            .amount-options {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-actions {
+                flex-direction: column;
+            }
+
+            header {
+                padding: 20px 15px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            #account-search {
+                border-radius: 50px;
+                margin-bottom: 10px;
+            }
+
+            #search-btn {
+                border-radius: 50px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>PurpleBank Account System</h1>
+            <p>Roleplay Banking Information</p>
+        </header>
+
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" id="account-search" placeholder="Enter 4-digit account number" maxlength="4">
+                <button id="search-btn">Search</button>
+            </div>
+        </div>
+
+        <div class="results" id="results">
+            <div class="account-card">
+                <div class="account-header">
+                    <div class="account-name" id="acc-name">Account Name</div>
+                    <div class="account-number" id="acc-number">#0000</div>
+                </div>
+                <div class="account-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Balance</div>
+                        <div class="detail-value balance" id="acc-balance">$0.00</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Age</div>
+                        <div class="detail-value" id="acc-age">0</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Birthday</div>
+                        <div class="detail-value" id="acc-birthday">Jan 1</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Occupation</div>
+                        <div class="detail-value" id="acc-job">None</div>
+                    </div>
+                </div>
+                <button class="pay-btn" id="pay-btn">Make Payment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal-overlay" id="payment-modal">
+        <div class="payment-modal">
+            <div class="modal-header">
+                <h2>Make Payment</h2>
+                <button class="close-btn" id="close-modal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="recipient">Recipient</label>
+                <input type="text" id="recipient" disabled>
+            </div>
+            <div class="form-group">
+                <label for="amount">Amount ($)</label>
+                <input type="number" id="amount" placeholder="Enter amount" min="1" value="100">
+            </div>
+            <div class="amount-options">
+                <button class="amount-btn" data-amount="50">$50</button>
+                <button class="amount-btn" data-amount="100">$100</button>
+                <button class="amount-btn" data-amount="250">$250</button>
+                <button class="amount-btn" data-amount="500">$500</button>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password">
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel-btn" id="cancel-payment">Cancel</button>
+                <button class="modal-btn confirm-btn" id="confirm-payment">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // Account database
+        const accounts = [
+            {
+                id: "7638",
+                name: "Alexandra Morgan",
+                balance: 8425.75,
+                age: 32,
+                birthday: "May 15",
+                job: "Software Engineer"
+            },
+            {
+                id: "4291",
+                name: "Marcus Chen",
+                balance: 12500.20,
+                age: 45,
+                birthday: "November 3",
+                job: "Financial Analyst"
+            },
+            {
+                id: "1854",
+                name: "Sophia Rodriguez",
+                balance: 3200.50,
+                age: 28,
+                birthday: "February 22",
+                job: "Graphic Designer"
+            },
+            {
+                id: "6723",
+                name: "James Wilson",
+                balance: 15675.30,
+                age: 52,
+                birthday: "September 8",
+                job: "Architect"
+            }
+        ];
+
+        // DOM elements
+        const searchInput = document.getElementById('account-search');
+        const searchBtn = document.getElementById('search-btn');
+        const resultsDiv = document.getElementById('results');
+        const payBtn = document.getElementById('pay-btn');
+        const paymentModal = document.getElementById('payment-modal');
+        const closeModal = document.getElementById('close-modal');
+        const cancelPayment = document.getElementById('cancel-payment');
+        const confirmPayment = document.getElementById('confirm-payment');
+        const amountInput = document.getElementById('amount');
+        const amountBtns = document.querySelectorAll('.amount-btn');
+        const recipientInput = document.getElementById('recipient');
+        const passwordInput = document.getElementById('password');
+        const notification = document.getElementById('notification');
+
+        // Current account variable
+        let currentAccount = null;
+
+        // Search function
+        function searchAccount() {
+            const accountNumber = searchInput.value.trim();
+            
+            // Validate input
+            if (accountNumber.length !== 4 || !/^\d+$/.test(accountNumber)) {
+                showNotification("Please enter a valid 4-digit account number", "error");
+                return;
+            }
+            
+            // Find account
+            const account = accounts.find(acc => acc.id === accountNumber);
+            
+            if (account) {
+                currentAccount = account;
+                // Update UI with account info
+                document.getElementById('acc-name').textContent = account.name;
+                document.getElementById('acc-number').textContent = `#${account.id}`;
+                document.getElementById('acc-balance').textContent = `$${account.balance.toFixed(2)}`;
+                document.getElementById('acc-age').textContent = account.age;
+                document.getElementById('acc-birthday').textContent = account.birthday;
+                document.getElementById('acc-job').textContent = account.job;
+                
+                resultsDiv.style.display = 'block';
+                showNotification("Account found!", "success");
+            } else {
+                currentAccount = null;
+                resultsDiv.style.display = 'none';
+                showNotification("Account not found", "error");
+            }
+        }
+
+        // Show payment modal
+        function showPaymentModal() {
+            if (!currentAccount) return;
+            
+            recipientInput.value = `${currentAccount.name} (#${currentAccount.id})`;
+            amountInput.value = "100";
+            passwordInput.value = "";
+            paymentModal.classList.add('active');
+        }
+
+        // Close payment modal
+        function closePaymentModal() {
+            paymentModal.classList.remove('active');
+        }
+
+        // Process payment
+        function processPayment() {
+            const amount = parseFloat(amountInput.value);
+            const password = passwordInput.value;
+            
+            // Validate amount
+            if (isNaN(amount) || amount <= 0) {
+                showNotification("Please enter a valid amount", "error");
+                return;
+            }
+            
+            // Check sufficient balance
+            if (amount > currentAccount.balance) {
+                showNotification("Insufficient funds", "error");
+                return;
+            }
+            
+            // Check password (demo password is "1234")
+            if (password !== "1234") {
+                showNotification("Incorrect password", "error");
+                return;
+            }
+            
+            // Update balance
+            currentAccount.balance -= amount;
+            document.getElementById('acc-balance').textContent = `$${currentAccount.balance.toFixed(2)}`;
+            
+            closePaymentModal();
+            showNotification(`Payment of $${amount.toFixed(2)} processed successfully!`, "success");
+        }
+
+        // Notification function
+        function showNotification(message, type) {
+            notification.textContent = message;
+            notification.className = "notification";
+            if (type === "error") {
+                notification.classList.add("error");
+            }
+            notification.style.display = "block";
+            
+            setTimeout(() => {
+                notification.style.display = "none";
+            }, 3000);
+        }
+
+        // Event listeners
+        searchBtn.addEventListener('click', searchAccount);
+        
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchAccount();
+            }
+        });
+
+        payBtn.addEventListener('click', showPaymentModal);
+        
+        closeModal.addEventListener('click', closePaymentModal);
+        cancelPayment.addEventListener('click', closePaymentModal);
+        
+        confirmPayment.addEventListener('click', processPayment);
+        
+        amountBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                amountInput.value = btn.getAttribute('data-amount');
+            });
+        });
+
+        // Close modal when clicking outside
+        paymentModal.addEventListener('click', (e) => {
+            if (e.target === paymentModal) {
+                closePaymentModal();
+            }
+        });
+    </script>
+</body>
+</html>
