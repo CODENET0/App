@@ -9,19 +9,20 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
+            font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
         :root {
             --outline: #4D4D57;
-            --background: #ACA1E6;
-            --card-bg: #F0EDFF;
-            --primary: #7E6BEF;
-            --primary-dark: #5A4BC2;
-            --success: #8BC34A;
-            --error: #FF6B6B;
+            --background: #FFE6A7; /* Monopoly board color */
+            --card-bg: #FFF4D4;
+            --primary: #E52B50; /* Monopoly red */
+            --primary-dark: #C2183B;
+            --success: #4CAF50;
+            --error: #FF5252;
             --text: #333344;
+            --money: #228B22; /* Money green */
         }
 
         body {
@@ -42,8 +43,6 @@
             border: 2px solid var(--outline);
             box-shadow: 4px 4px 0 var(--outline);
             overflow: hidden;
-            transform: scale(0.95);
-            transform-origin: top center;
         }
 
         header {
@@ -57,6 +56,7 @@
         h1 {
             font-size: 1.3rem;
             margin-bottom: 3px;
+            letter-spacing: 1px;
         }
 
         .search-section {
@@ -151,7 +151,7 @@
         }
 
         .balance {
-            color: var(--primary-dark);
+            color: var(--money);
             font-size: 1rem;
         }
 
@@ -181,6 +181,7 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            display: none;
         }
 
         .payment-modal {
@@ -338,7 +339,7 @@
     </div>
 
     <!-- Payment Modal -->
-    <div class="modal-overlay" id="payment-modal" style="display: none;">
+    <div class="modal-overlay" id="payment-modal">
         <div class="payment-modal">
             <div class="modal-header">
                 <h2>Make Payment</h2>
