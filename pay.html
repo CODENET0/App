@@ -3,170 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PurpleBank - Account System</title>
+    <title>Super Pay</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Comic Sans MS', 'Marker Felt', 'Segoe UI', sans-serif;
+            -webkit-tap-highlight-color: transparent; /* Removes mobile tap highlight */
         }
 
         :root {
-            --primary: #7e57c2;
-            --primary-light: #b085f5;
-            --primary-dark: #4d2c91;
-            --light: #f3e5f5;
-            --dark: #311b92;
-            --success: #66bb6a;
-            --error: #ef5350;
+            --outline: #4D4D57;
+            --background: #ACA1E6;
+            --card-bg: #F0EDFF;
+            --primary: #7E6BEF;
+            --primary-dark: #5A4BC2;
+            --success: #8BC34A;
+            --error: #FF6B6B;
+            --text: #333344;
+            --light-text: #666677;
         }
 
         body {
-            background: linear-gradient(135deg, #e0c3fc, #bb86fc);
+            background-color: var(--background);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            touch-action: manipulation; /* Better touch response */
         }
 
         .container {
             width: 100%;
             max-width: 800px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(126, 87, 194, 0.3);
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            border: 3px solid var(--outline);
+            box-shadow: 8px 8px 0 var(--outline);
             overflow: hidden;
-            animation: fadeIn 0.5s ease-out;
         }
 
         header {
-            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            background-color: var(--primary);
             color: white;
-            padding: 25px;
+            padding: 20px;
             text-align: center;
+            border-bottom: 3px solid var(--outline);
         }
 
         h1 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             margin-bottom: 5px;
+            text-shadow: 2px 2px 0 var(--outline);
         }
 
         .search-section {
-            padding: 30px;
+            padding: 20px;
             text-align: center;
+            border-bottom: 3px solid var(--outline);
         }
 
         .search-box {
             display: flex;
             max-width: 500px;
-            margin: 0 auto 20px;
+            margin: 0 auto 15px;
         }
 
         #account-search {
             flex: 1;
-            padding: 15px 20px;
-            border: 2px solid #d9c7f8;
+            padding: 12px 15px;
+            border: 3px solid var(--outline);
             border-radius: 50px 0 0 50px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             outline: none;
+            background-color: white;
+            box-shadow: 4px 4px 0 var(--outline);
+            -webkit-appearance: none; /* Fix for iOS */
         }
 
         #search-btn {
-            padding: 15px 25px;
-            background: var(--primary);
+            padding: 12px 20px;
+            background-color: var(--primary);
             color: white;
-            border: none;
+            border: 3px solid var(--outline);
             border-radius: 0 50px 50px 0;
             cursor: pointer;
-            font-size: 1.1rem;
-            transition: all 0.3s;
+            font-size: 1rem;
+            font-weight: bold;
+            box-shadow: 4px 4px 0 var(--outline);
+            transition: all 0.2s;
+            -webkit-appearance: none; /* Fix for iOS */
         }
 
-        #search-btn:hover {
-            background: var(--primary-dark);
+        #search-btn:active {
+            background-color: var(--primary-dark);
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 var(--outline);
         }
 
         .results {
-            padding: 0 30px 30px;
+            padding: 0 20px 20px;
             display: none;
         }
 
         .account-card {
-            background: white;
+            background-color: white;
             border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(126, 87, 194, 0.1);
-            margin-bottom: 20px;
+            padding: 20px;
+            border: 3px solid var(--outline);
+            box-shadow: 6px 6px 0 var(--outline);
+            margin-bottom: 15px;
         }
 
         .account-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--outline);
         }
 
         .account-name {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: bold;
-            color: var(--dark);
+            color: var(--text);
         }
 
         .account-number {
             color: var(--primary);
             font-weight: bold;
+            background-color: #F0EDFF;
+            padding: 4px 8px;
+            border-radius: 20px;
+            border: 2px solid var(--outline);
         }
 
         .account-details {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            gap: 10px;
         }
 
         .detail-item {
-            background: #f9f5ff;
-            padding: 15px;
+            background-color: #F8F6FF;
+            padding: 12px;
             border-radius: 10px;
+            border: 2px solid var(--outline);
         }
 
         .detail-label {
             color: var(--primary);
-            font-size: 0.9rem;
-            margin-bottom: 5px;
+            font-size: 0.8rem;
+            margin-bottom: 4px;
         }
 
         .detail-value {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
+            color: var(--text);
         }
 
         .balance {
             color: var(--primary-dark);
-            font-size: 1.5rem;
+            font-size: 1.3rem;
         }
 
         .pay-btn {
             display: block;
             width: 100%;
-            padding: 15px;
-            background: var(--primary);
+            padding: 12px;
+            background-color: var(--primary);
             color: white;
-            border: none;
+            border: 3px solid var(--outline);
             border-radius: 10px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 20px;
-            transition: all 0.3s;
+            margin-top: 15px;
+            box-shadow: 4px 4px 0 var(--outline);
+            transition: all 0.2s;
         }
 
-        .pay-btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
+        .pay-btn:active {
+            background-color: var(--primary-dark);
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 var(--outline);
         }
 
         /* Payment Modal */
@@ -176,7 +200,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.5);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -192,12 +216,13 @@
         }
 
         .payment-modal {
-            background: white;
+            background-color: white;
             border-radius: 15px;
             width: 90%;
             max-width: 500px;
-            padding: 25px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            padding: 20px;
+            border: 3px solid var(--outline);
+            box-shadow: 8px 8px 0 var(--outline);
             transform: translateY(20px);
             transition: transform 0.3s ease;
         }
@@ -210,12 +235,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--outline);
         }
 
         .modal-header h2 {
-            color: var(--dark);
-            font-size: 1.5rem;
+            color: var(--text);
+            font-size: 1.3rem;
         }
 
         .close-btn {
@@ -223,97 +250,105 @@
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
-            color: #888;
+            color: var(--outline);
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: var(--primary);
             font-weight: 600;
         }
 
         .form-group input {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0d0f0;
+            padding: 10px 12px;
+            border: 3px solid var(--outline);
             border-radius: 10px;
             font-size: 1rem;
+            background-color: white;
+            -webkit-appearance: none;
         }
 
         .amount-options {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 15px;
         }
 
         .amount-btn {
-            padding: 12px;
-            background: #f0e5ff;
-            border: 2px solid #e0d0f0;
+            padding: 10px;
+            background-color: #F0EDFF;
+            border: 3px solid var(--outline);
             border-radius: 10px;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
+            box-shadow: 3px 3px 0 var(--outline);
         }
 
-        .amount-btn:hover {
-            background: var(--primary);
+        .amount-btn:active {
+            background-color: var(--primary);
             color: white;
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0 var(--outline);
         }
 
         .modal-actions {
             display: flex;
-            gap: 15px;
+            gap: 10px;
         }
 
         .modal-btn {
             flex: 1;
-            padding: 12px;
-            border: none;
+            padding: 10px;
+            border: 3px solid var(--outline);
             border-radius: 10px;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
+            box-shadow: 3px 3px 0 var(--outline);
         }
 
         .confirm-btn {
-            background: var(--success);
+            background-color: var(--success);
             color: white;
         }
 
         .cancel-btn {
-            background: #f0f0f0;
-            color: #555;
+            background-color: #F0F0F0;
+            color: var(--text);
+        }
+
+        .modal-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0 var(--outline);
         }
 
         .notification {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            background: var(--success);
+            top: 15px;
+            right: 15px;
+            padding: 12px 20px;
+            background-color: var(--success);
             color: white;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 3px solid var(--outline);
+            box-shadow: 4px 4px 0 var(--outline);
             display: none;
             z-index: 1100;
+            font-weight: bold;
         }
 
         .notification.error {
-            background: var(--error);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            background-color: var(--error);
         }
 
         /* Mobile Responsiveness */
@@ -331,7 +366,7 @@
             }
 
             header {
-                padding: 20px 15px;
+                padding: 15px;
             }
 
             h1 {
@@ -357,13 +392,12 @@
 <body>
     <div class="container">
         <header>
-            <h1>PurpleBank Account System</h1>
-            <p>Roleplay Banking Information</p>
+            <h1>Super Pay</h1>
         </header>
 
         <div class="search-section">
             <div class="search-box">
-                <input type="text" id="account-search" placeholder="Enter 4-digit account number" maxlength="4">
+                <input type="text" id="account-search" placeholder="Enter 4-digit account number" maxlength="4" inputmode="numeric" pattern="[0-9]*">
                 <button id="search-btn">Search</button>
             </div>
         </div>
@@ -410,7 +444,7 @@
             </div>
             <div class="form-group">
                 <label for="amount">Amount ($)</label>
-                <input type="number" id="amount" placeholder="Enter amount" min="1" value="100">
+                <input type="number" id="amount" placeholder="Enter amount" min="1" value="100" inputmode="decimal">
             </div>
             <div class="amount-options">
                 <button class="amount-btn" data-amount="50">$50</button>
@@ -432,7 +466,7 @@
     <div class="notification" id="notification"></div>
 
     <script>
-        // Account database
+        // Account database with individual passwords
         const accounts = [
             {
                 id: "7638",
@@ -440,7 +474,8 @@
                 balance: 8425.75,
                 age: 32,
                 birthday: "May 15",
-                job: "Software Engineer"
+                job: "Software Engineer",
+                password: "alex2023"
             },
             {
                 id: "4291",
@@ -448,7 +483,8 @@
                 balance: 12500.20,
                 age: 45,
                 birthday: "November 3",
-                job: "Financial Analyst"
+                job: "Financial Analyst",
+                password: "marcus$$"
             },
             {
                 id: "1854",
@@ -456,7 +492,8 @@
                 balance: 3200.50,
                 age: 28,
                 birthday: "February 22",
-                job: "Graphic Designer"
+                job: "Graphic Designer",
+                password: "sophiaGd"
             },
             {
                 id: "6723",
@@ -464,7 +501,8 @@
                 balance: 15675.30,
                 age: 52,
                 birthday: "September 8",
-                job: "Architect"
+                job: "Architect",
+                password: "jamesBld"
             }
         ];
 
@@ -486,9 +524,12 @@
         // Current account variable
         let currentAccount = null;
 
-        // Search function
+        // Search function - optimized for mobile
         function searchAccount() {
             const accountNumber = searchInput.value.trim();
+            
+            // Clear previous results
+            resultsDiv.style.display = 'none';
             
             // Validate input
             if (accountNumber.length !== 4 || !/^\d+$/.test(accountNumber)) {
@@ -513,7 +554,6 @@
                 showNotification("Account found!", "success");
             } else {
                 currentAccount = null;
-                resultsDiv.style.display = 'none';
                 showNotification("Account not found", "error");
             }
         }
@@ -533,14 +573,19 @@
             paymentModal.classList.remove('active');
         }
 
-        // Process payment
+        // Process payment with individual passwords
         function processPayment() {
             const amount = parseFloat(amountInput.value);
             const password = passwordInput.value;
             
             // Validate amount
-            if (isNaN(amount) || amount <= 0) {
+            if (isNaN(amount)) {
                 showNotification("Please enter a valid amount", "error");
+                return;
+            }
+            
+            if (amount <= 0) {
+                showNotification("Amount must be greater than 0", "error");
                 return;
             }
             
@@ -550,8 +595,8 @@
                 return;
             }
             
-            // Check password (demo password is "1234")
-            if (password !== "1234") {
+            // Check password against account's individual password
+            if (password !== currentAccount.password) {
                 showNotification("Incorrect password", "error");
                 return;
             }
@@ -578,13 +623,22 @@
             }, 3000);
         }
 
-        // Event listeners
+        // Event listeners - optimized for mobile
         searchBtn.addEventListener('click', searchAccount);
-        
-        searchInput.addEventListener('keypress', (e) => {
+        searchBtn.addEventListener('touchend', (e) => {
+            e.preventDefault(); // Prevent double-tap zoom
+            searchAccount();
+        });
+
+        searchInput.addEventListener('keyup', (e) => {
             if (e.key === 'Enter') {
                 searchAccount();
             }
+        });
+
+        // Force numeric input on mobile
+        searchInput.addEventListener('input', () => {
+            searchInput.value = searchInput.value.replace(/[^0-9]/g, '').slice(0, 4);
         });
 
         payBtn.addEventListener('click', showPaymentModal);
@@ -597,7 +651,7 @@
         amountBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 amountInput.value = btn.getAttribute('data-amount');
-            });
+                   });
         });
 
         // Close modal when clicking outside
