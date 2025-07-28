@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Format Generator</title>
+    <style>
+        :root {
+            --outline: #4D4D57;
+            --bg: #ACA1E6;
+            --item-bg: #F0EFF4;
+            --button: #8A7BC8;
+            --button-hover: #9B8DDA;
+            --text: #333344;
+            --tag: #C5B8E8;
+            --tag-border: #9B8DDA;
+            --remove: #FF6B6B;
+            --input-bg: #FFFFFF;
+        }
+        
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            color: var(--text);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--item-bg);
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid var(--outline);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: var(--text);
+        }
+        
+        .format-selector {
+            margin-bottom: 25px;
+        }
+        
+        .format-options {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .format-option {
+            padding: 12px 20px;
+            border: 2px solid var(--outline);
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: var(--item-bg);
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        
+        .format-option:hover {
+            background-color: var(--button);
+            color: white;
+        }
+        
+        .format-option.selected {
+            background-color: var(--button);
+            color: white;
+        }
+        
+        .form-section {
+            display: none;
+        }
+        
+        .form-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .item-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid var(--outline);
+            position: relative;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--outline);
+            border-radius: 6px;
+            font-size: 15px;
+            background-color: var(--input-bg);
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--button);
+        }
+        
+        .url-input {
+            display: flex;
+        }
+        
+        .url-prefix {
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 2px solid var(--outline);
+            border-right: none;
+            border-radius: 6px 0 0 6px;
+        }
+        
+        .url-input input {
+            border-radius: 0 6px 6px 0;
+        }
+        
+        .array-input {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        
+        .array-input input {
+            border-radius: 6px 0 0 6px;
+            margin-right: 0;
+        }
+        
+        .add-btn {
+            background-color: var(--button);
+            border: 2px solid var(--outline);
+            border-radius: 0 6px 6px 0;
+            padding: 0 15px;
+            cursor: pointer;
+            font-size: 18px;
+            color: white;
+            transition: all 0.2s;
+        }
+        
+        .add-btn:hover {
+            background-color: var(--button-hover);
+        }
+        
+        .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .tag {
+            background-color: var(--tag);
+            padding: 5px 12px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--tag-border);
+            font-size: 14px;
+        }
+        
+        .tag-remove {
+            margin-left: 8px;
+            cursor: pointer;
+            color: var(--remove);
+            font-weight: bold;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .checkbox-group input {
+            width: auto;
+        }
+        
+        .add-item-btn {
+            background-color: var(--button);
+            color: white;
+            border: 2px solid var(--outline);
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto;
+            transition: all 0.2s;
+        }
+        
+        .add-item-btn:hover {
+            background-color: var(--button-hover);
+        }
+        
+        .result-container {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            border: 2px solid var(--outline);
+            position: relative;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--button);
+            border: 2px solid var(--outline);
+            border-radius: 6px;
+            padding: 5px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            color: white;
+            transition: all 0.2s;
+        }
+        
+        .copy-btn:hover {
+            background-color: var(--button-hover);
+        }
+        
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 0;
+            font-family: 'Courier New', monospace;
+            line-height: 1.4;
+        }
+        
+        .remove-item-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--remove);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 600px) {
+            .format-options {
+                flex-direction: column;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>JSON Format Generator</h1>
+        
+        <div class="format-selector">
+            <div class="format-options">
+                <div class="format-option selected" data-format="linkVerse">Link Verse</div>
+                <div class="format-option" data-format="orangePlay">Orange Play</div>
+                <div class="format-option" data-format="superPay">Super Pay</div>
+            </div>
+        </div>
+        
+        <div id="linkVerseForm" class="form-section active">
+            <div id="linkVerseItems">
+                <div class="item-container">
+                    <button class="remove-item-btn" onclick="removeItem(this, 'linkVerse')">×</button>
+                    <div class="form-group">
+                        <label>Name:</label>
+                        <input type="text" placeholder="Enter name" oninput="generateJSON()">
+                    </div>
+                    <div class="form-group">
+                        <label>URL:</label>
+                        <div class="url-input">
+                            <span class="url-prefix">https://</span>
+                            <input type="text" placeholder="example.com" oninput="generateJSON()">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Categories:</label>
+                        <div class="array-input">
+                            <input type="text" placeholder="Enter a tag">
+                            <button class="add-btn" onclick="addTagInItem(this)">+</button>
+                        </div>
+                        <div class="tag-container"></div>
+                    </div>
+                </div>
+            </div>
+            <button class="add-item-btn" onclick="addItem('linkVerse')">+ Add Another Item</button>
+        </div>
+        
+        <div id="orangePlayForm" class="form-section">
+            <div id="orangePlayItems">
+                <div class="item-container">
+                    <button class="remove-item-btn" onclick="removeItem(this, 'orangePlay')">×</button>
+                    <div class="form-group">
+                        <label>ID:</label>
+                        <input type="number" placeholder="Enter ID number" oninput="generateJSON()">
+                    </div>
+                    <div class="form-group">
+                        <label>Name:</label>
+                        <input type="text" placeholder="Enter name" oninput="generateJSON()">
+                    </div>
+                    <div class="form-group">
+                        <label>Description:</label>
+                        <textarea placeholder="Enter description" oninput="generateJSON()"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Tags:</label>
+                        <div class="array-input">
+                            <input type="text" placeholder="Enter a tag">
+                            <button class="add-btn" onclick="addTagInItem(this)">+</button>
+                        </div>
+                        <div class="tag-container"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>URL:</label>
+                        <div class="url-input">
+                            <span class="url-prefix">https://</span>
+                            <input type="text" placeholder="example.com" oninput="generateJSON()">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" onchange="generateJSON()">
+                            <label>Is Popular</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" onchange="generateJSON()">
+                            <label>Is New</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="add-item-btn" onclick="addItem('orangePlay')">+ Add Another Item</button>
+        </div>
+        
+        <div id="superPayForm" class="form-section">
+            <div id="superPayItems">
+                <div class="item-container">
+                    <button class="remove-item-btn" onclick="removeItem(this, 'superPay')">×</button>
+                    <div class="form-group">
+                        <label>ID:</label>
+                        <input type="text" pattern="\d{4}" placeholder="Enter 4-digit ID" maxlength="4" oninput="generateJSON()">
+                    </div>
+                    <div class="form-group">
+                        <label>Name:</label>
+                        <input type="text" placeholder="Enter name" oninput="generateJSON()">
+                    </div>
+                    <div class="form-group">
+                        <label>Balance:</label>
+                        <input type="number" step="1" placeholder="Enter balance" oninput="generateJSON()">
+                    </div>
+                    <div class="form-group">
+                        <label>Age:</label>
+                        <input type="number" placeholder="Enter age" oninput="generateJSON()">
+                    </div>
+                    <div class="form-group">
+                        <label>Birthday:</label>
+                        <input type="text" placeholder="e.g., sept 3" oninput="generateJSON()">
+                    </div>
+                    <div class="form-group">
+                        <label>Job:</label>
+                        <input type="text" placeholder="Enter job" oninput="generateJSON()">
+                    </div>
+                    <div class="form-group">
+                        <label>Password:</label>
+                        <input type="text" placeholder="Enter password" oninput="generateJSON()">
+                    </div>
+                </div>
+            </div>
+            <button class="add-item-btn" onclick="addItem('superPay')">+ Add Another Item</button>
+        </div>
+        
+        <div class="result-container">
+            <button class="copy-btn" onclick="copyToClipboard()">Copy</button>
+            <h3>Generated Output:</h3>
+            <pre id="jsonOutput">Select a format and fill in the fields to generate output.</pre>
+        </div>
+    </div>
+
+    <script>
+        // Format selection
+        document.querySelectorAll('.format-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.format-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                
+                document.querySelectorAll('.form-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(this.dataset.format + 'Form').classList.add('active');
+                
+                generateJSON();
+            });
+        });
+        
+        // Add tags to array inputs
+        function addTagInItem(button) {
+            const input = button.previousElementSibling;
+            const container = button.parentElement.nextElementSibling;
+            
+            if (input.value.trim() === '') return;
+            
+            const tag = document.createElement('div');
+            tag.className = 'tag';
+            tag.innerHTML = `
+                ${input.value.trim()}
+                <span class="tag-remove" onclick="this.parentElement.remove(); generateJSON()">×</span>
+            `;
+            
+            container.appendChild(tag);
+            input.value = '';
+            generateJSON();
+        }
+        
+        // Add new item to the list
+        function addItem(type) {
+            const container = document.getElementById(type + 'Items');
+            const newItem = document.createElement('div');
+            newItem.className = 'item-container';
+            
+            if (type === 'linkVerse') {
+                newItem.innerHTML = `
+                    <button class="remove-item-btn" onclick="removeItem(this, 'linkVerse')">×</button>
+                    <div class="form-group">
+                        <label>Name:</label>
+                        <input type="text" placeholder="Enter name" oninput="generateJSON()">
+                    </div>
+                    <div class="form-group">
+                        <label>URL:</label>
+                        <div class="url-input">
+                            <span class="url-prefix">https://</span>
+                            <input type="text" placeholder="example.com" oninput="generateJSON()">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Categories:</label>
+                        <div class="array-input">
+                            <input type="text" placeholder="Enter a tag">
+                            <button class="add-btn" onclick="addTagInItem(this)">+</button>
+                        </div>
+                        <div class="tag-container"></div>
+                    </div>
+                `;
+            } else if (type === 'orangePlay') {
+                newItem.innerHTML = `
+                    <button class="remove-item-btn" onclick="removeItem(this, 'orangePlay')">×</button>
+                    <div class="form-group">
+                        <label>ID:</label>
+                        <input type="number" placeholder="Enter ID number" oninput="generateJSON()">
+                    </div>
+                    <div class="form-group">
+                        <label>Name:</label>
+                        <input type="text" placeholder="Enter name" oninput="generateJSON()">
+                    </div>
+                    <div class="form-group">
+                        <label>Description:</label>
+                        <textarea placeholder="Enter description" oninput="generateJSON()"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Tags:</label>
+                        <div class="array-input">
+                            <input type="text" placeholder="Enter a tag">
+                            <button class="add-btn" onclick="addTagInItem(this)">+</button>
+                        </div>
+                        <div class="tag-container"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>URL:</label>
+                        <div class="url-input">
+                            <span class="url-prefix">https://</span>
+                            <input type="text" placeholder="example.com" oninput="generateJSON()">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" onchange="generateJSON()">
+                            <label>Is Popular</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" onchange="generateJSON()">
+                            <label>Is New</label>
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'superPay') {
+                newItem.innerHTML = `
+                    <button class="remove-item-btn" onclick="removeItem(this, 'superPay')">×</button>
+                    <div class="form-group">
+                        <label>ID:</label>
+                        <input type="text" pattern="\d{4}" placeholder="Enter 4-digit ID" maxlength="4" oninput="generateJSON()">
+                    </div>
+                    <div class="form-group">
+                        <label>Name:</label>
+                        <input type="text" placeholder="Enter name" oninput="generateJSON()">
+                    </div>
+                    <div class="form-group">
+                        <label>Balance:</label>
+                        <input type="number" step="1" placeholder="Enter balance" oninput="generateJSON()">
+                    </div>
+                    <div class="form-group">
+                        <label>Age:</label>
+                        <input type="number" placeholder="Enter age" oninput="generateJSON()">
+                    </div>
+                    <div class="form-group">
+                        <label>Birthday:</label>
+                        <input type="text" placeholder="e.g., sept 3" oninput="generateJSON()">
+                         job: "${inputs[5].value || "txt"}",
+    password: "${inputs[6].value || "txt"}"
+}`;
+                    
+                    if (i < items.length - 1) output += ",\n";
+                }
+            }
+            
+            document.getElementById('jsonOutput').textContent = output;
+        }
+        
+        // Copy to clipboard
+        function copyToClipboard() {
+            const output = document.getElementById('jsonOutput');
+            navigator.clipboard.writeText(output.textContent).then(() => {
+                const copyBtn = document.querySelector('.copy-btn');
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = "Copied!";
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                }, 2000);
+            });
+        }
+        
+        // Initialize with first format
+        generateJSON();
+    </script>
+</body>
+</html>
+            
