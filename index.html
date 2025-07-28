@@ -3,20 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game & App Hub</title>
+    <title>Digital Tools Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #4361ee;
-            --primary-light: #4895ef;
+            --blue: #4361ee;
+            --blue-light: #4895ef;
+            --orange: #f8961e;
+            --yellow: #ffd60a;
+            --purple: #7209b7;
+            --green: #4cc9f0;
             --dark: #1a1a2e;
             --darker: #0d0d1a;
             --light: #f8f9fa;
-            --red: #f94144;
-            --purple: #7209b7;
-            --teal: #38b6ff; /* Updated teal color */
-            --orange: #f8961e;
-            --green: #4cc9f0;
         }
         
         * {
@@ -27,7 +26,7 @@
         }
         
         body {
-            background: linear-gradient(to bottom, var(--darker), var(--dark));
+            background: linear-gradient(135deg, var(--darker), var(--dark));
             color: var(--light);
             min-height: 100vh;
             overflow-x: hidden;
@@ -50,7 +49,7 @@
         .greeting {
             font-size: 2.8rem;
             margin-bottom: 0.5rem;
-            background: linear-gradient(to right, var(--primary-light), var(--primary));
+            background: linear-gradient(to right, var(--blue-light), var(--blue));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -77,7 +76,7 @@
         }
         
         .tool-card {
-            background: rgba(255, 255, 255, 0.07);
+            background: linear-gradient(145deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-radius: 16px;
@@ -108,9 +107,11 @@
             transform: scale(1.1);
         }
         
-        .games .card-icon { color: var(--red); }
-        .projects .card-icon { color: var(--orange); }
-        .all-apps .card-icon { color: var(--purple); } /* Changed to use grid icon */
+        .linkflow .card-icon { color: var(--blue); }
+        .orange-play .card-icon { color: var(--orange); }
+        .super-play .card-icon { color: var(--yellow); }
+        .json-generator .card-icon { color: var(--purple); }
+        .other-links .card-icon { color: var(--green); }
         
         .card-title {
             font-size: 1.6rem;
@@ -145,16 +146,25 @@
             cursor: pointer;
         }
         
-        .games .card-btn {
-            background: linear-gradient(135deg, var(--red), #f3722c);
+        .linkflow .card-btn {
+            background: linear-gradient(135deg, var(--blue), #3a0ca3);
         }
         
-        .projects .card-btn {
-            background: linear-gradient(135deg, var(--orange), #f9844a);
+        .orange-play .card-btn {
+            background: linear-gradient(135deg, var(--orange), #f3722c);
         }
         
-        .all-apps .card-btn {
+        .super-play .card-btn {
+            background: linear-gradient(135deg, var(--yellow), #ffc300);
+            color: #333;
+        }
+        
+        .json-generator .card-btn {
             background: linear-gradient(135deg, var(--purple), #b5179e);
+        }
+        
+        .other-links .card-btn {
+            background: linear-gradient(135deg, var(--green), #38a3a5);
         }
         
         .card-btn:hover {
@@ -171,10 +181,35 @@
             transform: translateX(3px);
         }
         
+        /* Input Field Styles */
+        .link-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: var(--light);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        
+        .link-input:focus {
+            outline: none;
+            border-color: var(--green);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .link-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
         /* Category Borders */
-        .games { border-left: 6px solid var(--red); }
-        .projects { border-left: 6px solid var(--orange); }
-        .all-apps { border-left: 6px solid var(--purple); }
+        .linkflow { border-left: 6px solid var(--blue); }
+        .orange-play { border-left: 6px solid var(--orange); }
+        .super-play { border-left: 6px solid var(--yellow); }
+        .json-generator { border-left: 6px solid var(--purple); }
+        .other-links { border-left: 6px solid var(--green); }
         
         footer {
             text-align: center;
@@ -184,7 +219,7 @@
             font-size: 0.9rem;
         }
         
-        /* Fix for mobile scrolling issues */
+        /* Mobile Styles */
         @media (max-width: 768px) {
             body {
                 overflow-y: auto;
@@ -215,7 +250,7 @@
             }
         }
         
-        /* Animation */
+        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -228,50 +263,68 @@
         .tool-card:nth-child(1) { animation-delay: 0.1s; }
         .tool-card:nth-child(2) { animation-delay: 0.2s; }
         .tool-card:nth-child(3) { animation-delay: 0.3s; }
+        .tool-card:nth-child(4) { animation-delay: 0.4s; }
+        .tool-card:nth-child(5) { animation-delay: 0.5s; }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1 class="greeting">Hello User!</h1>
-            <p class="welcome-message">Discover the best games, projects, and apps curated just for you</p>
+            <h1 class="greeting">Digital Tools</h1>
+            <p class="welcome-message">Essential utilities for web apps, games, data management, and quick access</p>
         </header>
         
         <div class="tool-grid">
-            <!-- All Apps Card -->
-            <div class="tool-card all-apps">
-                <i class="fas fa-th-large card-icon"></i>
-                <h3 class="card-title">All Apps</h3>
-                <p class="card-desc">Complete collection of web applications organized for quick use.</p>
-                <a href="all-apps.html" class="card-btn">Browse All <i class="fas fa-arrow-right"></i></a>
+            <!-- LinkFlow Card -->
+            <div class="tool-card linkflow">
+                <i class="fas fa-link card-icon"></i>
+                <h3 class="card-title">LinkFlow</h3>
+                <p class="card-desc">A curated collection of essential web applications and useful links for productivity and daily tasks.</p>
+                <a href="all-apps.html" class="card-btn">Access Links <i class="fas fa-arrow-right"></i></a>
             </div>
             
-            <!-- Browser Games Card -->
-            <div class="tool-card games">
+            <!-- Orange Play Card -->
+            <div class="tool-card orange-play">
                 <i class="fas fa-gamepad card-icon"></i>
-                <h3 class="card-title">Browser Games</h3>
-                <p class="card-desc">Instant entertainment with no downloads. Play these games directly in your browser anytime.</p>
-                <a href="games.html" class="card-btn">Explore Games <i class="fas fa-arrow-right"></i></a>
+                <h3 class="card-title">Orange Play</h3>
+                <p class="card-desc">Free-to-play browser games that work instantly with no downloads required. Perfect for quick entertainment.</p>
+                <a href="games.html" class="card-btn">Play Games <i class="fas fa-arrow-right"></i></a>
             </div>
             
-            <!-- Projects Card -->
-            <div class="tool-card projects">
+            <!-- Super Play Card -->
+            <div class="tool-card super-play">
+                <i class="fas fa-coins card-icon"></i>
+                <h3 class="card-title">Super Play</h3>
+                <p class="card-desc">Premium games with in-app purchases and currency systems. Enhanced gameplay with optional upgrades.</p>
+                <a href="pay.html" class="card-btn">Upgrade Play <i class="fas fa-arrow-right"></i></a>
+            </div>
+            
+            <!-- JSON Generator Card -->
+            <div class="tool-card json-generator">
                 <i class="fas fa-code card-icon"></i>
-                <h3 class="card-title">Super Pay</h3>
-                <p class="card-desc">Role play Payment App</p>
-                <a href="pay.html" class="card-btn">View Projects <i class="fas fa-arrow-right"></i></a>
+                <h3 class="card-title">JSON Generator</h3>
+                <p class="card-desc">Create and manage JSON lists for your applications. Export data for LinkFlow, Orange Play, and Super Play.</p>
+                <a href="json-generator.html" class="card-btn">Generate JSON <i class="fas fa-arrow-right"></i></a>
+            </div>
+            
+            <!-- Other Links Card -->
+            <div class="tool-card other-links">
+                <i class="fas fa-plus-circle card-icon"></i>
+                <h3 class="card-title">Other Links</h3>
+                <p class="card-desc">Quickly access any link or file. Enter a URL or filename below to open it instantly.</p>
+                <input type="text" class="link-input" placeholder="Enter URL or filename...">
+                <button class="card-btn" onclick="openCustomLink()">Open Link <i class="fas fa-external-link-alt"></i></button>
             </div>
         </div>
         
         <footer>
-            <p>© 2023 Digital Hub | All Rights Reserved</p>
+            <p>© 2023 Digital Tools Hub | All Rights Reserved</p>
         </footer>
     </div>
 
     <script>
-        // Fix for mobile scrolling issues
+        // Mobile optimization
         document.addEventListener('DOMContentLoaded', function() {
-            // Force layout recalculation on touch devices
             if ('ontouchstart' in window) {
                 document.body.style.minHeight = window.innerHeight + 'px';
                 
@@ -280,7 +333,6 @@
                 });
             }
             
-            // Prevent card hover effects on touch devices
             function hasTouch() {
                 return 'ontouchstart' in document.documentElement || 
                        navigator.maxTouchPoints > 0 || 
@@ -289,6 +341,43 @@
             
             if (hasTouch()) {
                 document.body.classList.add('touch-device');
+            }
+        });
+        
+        // Open custom link function
+        function openCustomLink() {
+            const input = document.querySelector('.link-input');
+            let url = input.value.trim();
+            
+            if (!url) {
+                alert('Please enter a URL or filename');
+                return;
+            }
+            
+            // Add http:// if missing
+            if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('file://')) {
+                // Check if it's a file (has extension)
+                if (url.includes('.') && !url.includes(' ')) {
+                    url = 'file://' + url;
+                } else {
+                    url = 'https://' + url;
+                }
+            }
+            
+            // Try to open the link
+            try {
+                window.open(url, '_blank');
+                input.value = ''; // Clear input after opening
+            } catch (e) {
+                alert('Could not open the link. Please check the URL and try again.');
+                console.error(e);
+            }
+        }
+        
+        // Allow pressing Enter in the input field
+        document.querySelector('.link-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                openCustomLink();
             }
         });
     </script>
