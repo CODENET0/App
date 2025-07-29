@@ -16,6 +16,8 @@
             --tag-border: #9B8DDA;
             --remove: #FF6B6B;
             --input-bg: #FFFFFF;
+            --tab-active: #8A7BC8;
+            --tab-inactive: #D1C9F1;
         }
         
         * {
@@ -39,12 +41,14 @@
             padding: 20px;
             border: 2px solid var(--outline);
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.5s ease-out;
         }
         
         h1 {
             text-align: center;
             margin-bottom: 25px;
             color: var(--text);
+            animation: fadeIn 0.8s ease-out;
         }
         
         .format-selector {
@@ -64,27 +68,47 @@
             border-radius: 8px;
             cursor: pointer;
             background-color: var(--item-bg);
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             font-weight: 500;
+            position: relative;
+            overflow: hidden;
         }
         
         .format-option:hover {
-            background-color: var(--button);
-            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         
         .format-option.selected {
             background-color: var(--button);
             color: white;
+            animation: pulse 0.5s ease-out;
+        }
+        
+        .format-option::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--button);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .format-option.selected::after {
+            transform: scaleX(1);
         }
         
         .form-section {
             display: none;
+            animation: fadeIn 0.4s ease-out;
         }
         
         .form-section.active {
             display: block;
-            animation: fadeIn 0.3s ease-out;
+            animation: slideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
         .item-container {
@@ -94,10 +118,18 @@
             margin-bottom: 20px;
             border: 2px solid var(--outline);
             position: relative;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        .item-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         
         .form-group {
             margin-bottom: 15px;
+            animation: fadeIn 0.6s ease-out;
         }
         
         label {
@@ -113,11 +145,13 @@
             border-radius: 6px;
             font-size: 15px;
             background-color: var(--input-bg);
+            transition: all 0.3s ease;
         }
         
         input:focus, textarea:focus, select:focus {
             outline: none;
             border-color: var(--button);
+            box-shadow: 0 0 0 3px rgba(138, 123, 200, 0.2);
         }
         
         .url-input {
@@ -154,11 +188,12 @@
             cursor: pointer;
             font-size: 18px;
             color: white;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
         .add-btn:hover {
             background-color: var(--button-hover);
+            transform: scale(1.05);
         }
         
         .tag-container {
@@ -176,6 +211,7 @@
             align-items: center;
             border: 1px solid var(--tag-border);
             font-size: 14px;
+            animation: popIn 0.3s ease-out;
         }
         
         .tag-remove {
@@ -183,6 +219,11 @@
             cursor: pointer;
             color: var(--remove);
             font-weight: bold;
+            transition: transform 0.2s ease;
+        }
+        
+        .tag-remove:hover {
+            transform: scale(1.2);
         }
         
         .checkbox-group {
@@ -193,6 +234,7 @@
         
         .checkbox-group input {
             width: auto;
+            transform: scale(1.2);
         }
         
         .add-item-btn {
@@ -206,20 +248,52 @@
             cursor: pointer;
             display: block;
             margin: 20px auto;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
         .add-item-btn:hover {
             background-color: var(--button-hover);
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
         
         .result-container {
             margin-top: 30px;
-            padding: 20px;
-            background-color: white;
             border-radius: 8px;
             border: 2px solid var(--outline);
             position: relative;
+            overflow: hidden;
+            background-color: white;
+        }
+        
+        .result-tabs {
+            display: flex;
+            background-color: var(--tab-inactive);
+            border-bottom: 2px solid var(--outline);
+        }
+        
+        .result-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .result-tab.active {
+            background-color: var(--tab-active);
+            color: white;
+        }
+        
+        .result-content {
+            padding: 20px;
+            display: none;
+        }
+        
+        .result-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
         }
         
         .copy-btn {
@@ -233,11 +307,13 @@
             cursor: pointer;
             font-size: 14px;
             color: white;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
+            z-index: 2;
         }
         
         .copy-btn:hover {
             background-color: var(--button-hover);
+            transform: scale(1.05);
         }
         
         pre {
@@ -263,11 +339,64 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.3s ease;
         }
         
+        .remove-item-btn:hover {
+            transform: rotate(90deg) scale(1.1);
+        }
+        
+        /* Animations */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideIn {
+            from { 
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes popIn {
+            0% { 
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            80% { 
+                transform: scale(1.1);
+            }
+            100% { 
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
         }
         
         @media (max-width: 600px) {
@@ -277,6 +406,10 @@
             
             .container {
                 padding: 15px;
+            }
+            
+            .result-tabs {
+                flex-direction: column;
             }
         }
     </style>
@@ -405,9 +538,21 @@
         </div>
         
         <div class="result-container">
+            <div class="result-tabs">
+                <div class="result-tab active" data-tab="raw">Raw JSON</div>
+                <div class="result-tab" data-tab="formatted">Formatted</div>
+                <div class="result-tab" data-tab="minified">Minified</div>
+            </div>
             <button class="copy-btn" onclick="copyToClipboard()">Copy</button>
-            <h3>Generated Output:</h3>
-            <pre id="jsonOutput">Select a format and fill in the fields to generate output.</pre>
+            <div class="result-content active" id="rawOutput">
+                <pre>Select a format and fill in the fields to generate output.</pre>
+            </div>
+            <div class="result-content" id="formattedOutput">
+                <pre></pre>
+            </div>
+            <div class="result-content" id="minifiedOutput">
+                <pre></pre>
+            </div>
         </div>
     </div>
 
@@ -429,8 +574,23 @@
             });
         });
         
+        // Tab selection
+        document.querySelectorAll('.result-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.result-tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                document.querySelectorAll('.result-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(this.dataset.tab + 'Output').classList.add('active');
+            });
+        });
+        
         // Add tags to array inputs
-        function addTagInItem(button) {
+       function addTagInItem(button) {
             const input = button.previousElementSibling;
             const container = button.parentElement.nextElementSibling;
             
@@ -571,9 +731,11 @@
         function generateJSON() {
             const format = document.querySelector('.format-option.selected').dataset.format;
             let output = "";
+            let itemsCount = 0;
             
             if (format === 'linkVerse') {
                 const items = document.getElementById('linkVerseItems').children;
+                itemsCount = items.length;
                 
                 for (let i = 0; i < items.length; i++) {
                     const item = items[i];
@@ -595,6 +757,7 @@
                 }
             } else if (format === 'orangePlay') {
                 const items = document.getElementById('orangePlayItems').children;
+                itemsCount = items.length;
                 
                 for (let i = 0; i < items.length; i++) {
                     const item = items[i];
@@ -621,6 +784,7 @@
                 }
             } else if (format === 'superPay') {
                 const items = document.getElementById('superPayItems').children;
+                itemsCount = items.length;
                 
                 for (let i = 0; i < items.length; i++) {
                     const item = items[i];
@@ -640,18 +804,32 @@
                 }
             }
             
-            document.getElementById('jsonOutput').textContent = output;
+            // Update all output tabs
+            document.querySelector('#rawOutput pre').textContent = itemsCount > 1 ? `[\n${output}\n]` : output;
+            
+            try {
+                const jsonObj = itemsCount > 1 ? JSON.parse(`[${output}]`) : JSON.parse(`{${output}}`);
+                document.querySelector('#formattedOutput pre').textContent = JSON.stringify(jsonObj, null, 2);
+                document.querySelector('#minifiedOutput pre').textContent = JSON.stringify(jsonObj);
+            } catch (e) {
+                document.querySelector('#formattedOutput pre').textContent = "Invalid JSON format";
+                document.querySelector('#minifiedOutput pre').textContent = "Invalid JSON format";
+            }
         }
         
         // Copy to clipboard
         function copyToClipboard() {
-            const output = document.getElementById('jsonOutput');
-            navigator.clipboard.writeText(output.textContent).then(() => {
+            const activeTab = document.querySelector('.result-tab.active').dataset.tab;
+            const output = document.querySelector(`#${activeTab}Output pre`).textContent;
+            
+            navigator.clipboard.writeText(output).then(() => {
                 const copyBtn = document.querySelector('.copy-btn');
                 const originalText = copyBtn.textContent;
                 copyBtn.textContent = "Copied!";
+                copyBtn.classList.add('bounce');
                 setTimeout(() => {
                     copyBtn.textContent = originalText;
+                    copyBtn.classList.remove('bounce');
                 }, 2000);
             });
         }
